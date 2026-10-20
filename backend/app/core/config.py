@@ -9,4 +9,12 @@ class Settings(BaseSettings):
     model_config = {"env_file": ".env", "extra": "ignore"}
     @property
     def origins(self): return [x.strip() for x in self.cors_origins.split(",") if x.strip()]
+    @property
+    def sqlalchemy_url(self) -> str:
+        # Render/Heroku-style URLs arrive as postgres:// or postgresql:// (no driver).
+        # SQLAlchemy would then pick psycopg2, which we do not install — force psycopg 3.
+        u=self.database_url
+        if u.startswith("postgres://"): u="postgresql+psycopg://"+u[len("postgres://"):]
+        elif u.startswith("postgresql://"): u="postgresql+psycopg://"+u[len("postgresql://"):]
+        return u
 settings = Settings()

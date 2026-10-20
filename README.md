@@ -32,6 +32,7 @@ cd ../frontend && npm run build     # verified: production build succeeds
 PostgreSQL locking tests: run the same pytest suite with `DATABASE_URL=postgresql+psycopg://...` against a disposable test DB — **not yet verified here (no PostgreSQL in this sandbox)**.
 
 ## Deployment (manual, not performed here)
+**Render step-by-step (Blueprint + manual + verification + troubleshooting): see `docs/DEPLOY_RENDER.md`.**
 - DB: create PostgreSQL on Neon/Supabase; copy its connection string (use `postgresql+psycopg://`).
 - Backend (Render): build `pip install -r requirements.txt`, start `python -m app.seed && uvicorn app.main:app --host 0.0.0.0 --port $PORT`; set env vars above with `COOKIE_SECURE=true` and CORS = your Vercel URL; health check `/health`.
 - Frontend (Vercel): root `frontend/`, set `BACKEND_INTERNAL_URL=https://<your-render-backend>`; the Next rewrite proxies `/api/*` so cookies stay same-origin.
